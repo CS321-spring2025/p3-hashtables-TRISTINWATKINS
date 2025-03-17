@@ -20,10 +20,10 @@ public class LinearProbing extends Hashtable {
                 table[index].incrementFrequency();
                 return;
             }
-            index = positiveMod(index + 1, tableSize); 
+            index = positiveMod(index + 1, tableSize);
         }
 
-        table[index] = obj; 
+        table[index] = obj;
         table[index].setProbeCount(probeCount);
         numElements++;
     }
@@ -35,29 +35,8 @@ public class LinearProbing extends Hashtable {
             if (table[index].getKey().equals(key)) {
                 return table[index];
             }
-            index = positiveMod(index + 1, tableSize); 
+            index = positiveMod(index + 1, tableSize);
         }
-        return null; 
-    }
-
-    
-    public boolean isDuplicate(HashObject obj) {
-        int index = positiveMod(obj.hashCode(), table.length);
-        while (table[index] != null) {
-            if (table[index].equals(obj)) {
-                return true;  
-            }
-            index = (index + 1) % table.length;
-        }
-        return false;  
-    }
-
-    public void printDebug() {
-        System.out.println("Debugging Linear Probing Table...");
-        for (int i = 0; i < table.length; i++) {
-            if (table[i] != null) {
-                System.out.println("Index " + i + ": " + table[i].toString());
-            }
-        }
+        return null;
     }
 }

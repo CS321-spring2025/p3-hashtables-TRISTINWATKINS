@@ -1,150 +1,115 @@
-// This file is not done yet, This is just the start, I still have debugging anf testing to run to get this file working, just wanted to start it.
-/**
- * @author Tristin Watkins
- * CS321 Spring 2025
- * March 12 2025
- */
-
-
-import java.io.*;
-import java.util.*;
+import java.util.Date;
+import java.util.Random;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class HashtableExperiment {
 
     public static void main(String[] args) {
-        if (args.length < 2) {
-            printUsage();
-            return;
+        if (args.length < 2 || args.length > 3) {
+            System.out.println("Usage: java HashtableExperiment <dataSource> <loadFactor> [<debugLevel>]");
+            System.exit(1);
         }
 
-        String dataSource = args[0];
+        int dataSource = Integer.parseInt(args[0]);
         double loadFactor = Double.parseDouble(args[1]);
-        int debugLevel = args.length > 2 ? Integer.parseInt(args[2]) : 0;
+        int debugLevel = (args.length == 3) ? Integer.parseInt(args[2]) : 0;
 
-        List<HashObject> data = loadData(dataSource);
+        int tableSize = TwinPrimeGenerator.generateTwinPrime(95500, 96000);
+        System.out.println("HashtableExperiment: Found a twin prime table capacity: " + tableSize);
 
-        int m = 10000; 
-        int n = (int) Math.ceil(loadFactor * m);
+        int numElements = (int) Math.ceil(loadFactor * tableSize);
 
-        runExperiment(data, n, m, loadFactor, debugLevel);
+        System.out.println("HashtableExperiment: Input: " + getDataSourceName(dataSource) + "  Loadfactor: " + loadFactor);
+
+        runExperiment(dataSource, numElements, tableSize, debugLevel);
     }
 
-    private static void printUsage() {
-        System.out.println("Usage: java HashtableExperiment <dataSource> <loadFactor> [<debugLevel>]");
-        System.out.println("<dataSource>: 1 ==> random numbers");
-        System.out.println("<dataSource>: 2 ==> date value as a long");
-        System.out.println("<dataSource>: 3 ==> word list");
-        System.out.println("<loadFactor>: The ratio of objects to table size, denoted by alpha = n/m");
-        System.out.println("<debugLevel>: 0 ==> print summary of experiment");
-        System.out.println("<debugLevel>: 1 ==> save hash tables to files");
-        System.out.println("<debugLevel>: 2 ==> print detailed debug output");
-    }
+    private static void runExperiment(int dataSource, int numElements, int tableSize, int debugLevel) {
+        Random random = new Random();
+        HashObject[] data = new HashObject[numElements];
 
-    private static List<HashObject> loadData(String dataSource) {
-        List<HashObject> data = new ArrayList<>();
-        switch (dataSource) {
-            case "1":
-                data = generateRandomNumbers();
-                break;
-            case "2":
-                data = generateDateObjects();
-                break;
-            case "3":
-                data = generateWordsFromFile();
-                break;
-            default:
-                System.out.println("Invalid data source!");
-                System.exit(1);
-        }
-        return data;
-    }
-
-    private static List<HashObject> generateRandomNumbers() {
-        List<HashObject> data = new ArrayList<>();
-        Random rand = new Random();
-        for (int i = 0; i < 10000; i++) {
-            data.add(new HashObject(rand.nextInt()));
-        }
-        return data;
-    }
-
-    private static List<HashObject> generateDateObjects() {
-        List<HashObject> data = new ArrayList<>();
-        long current = System.currentTimeMillis();
-        for (int i = 0; i < 10000; i++) {
-            data.add(new HashObject(new Date(current)));
-            current += 1000;
-        }
-        return data;
-    }
-
-    private static List<HashObject> generateWordsFromFile() {
-        List<HashObject> data = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("word-list.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                data.add(new HashObject(line));
+        // Generate data
+        if (dataSource == 1) { // Random numbers
+            for (int i = 0; i < numElements; i++) {
+                data[i] = new HashObject(random.nextInt());
             }
-        } catch (IOException e) {
-            System.out.println("Error reading word list file.");
-            e.printStackTrace();
+        } else if (dataSource == 2) { // Date values
+            long current = new Date().getTime();
+            for (int i = 0; i < numElements; i++) {
+                data[i] = new HashObject(new Date(current));
+                current += 1000;
+            }
+        } else if (dataSource == 3) { // Word list
+            try (BufferedReader reader = new BufferedReader(new FileReader("word-list.txt"))) {
+                String line;
+                int count = 0;
+                while ((line = reader.readLine()) != null && count < numElements) {
+                    data[count++] = new HashObject(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
         }
-        return data;
+
+        // Run Linear Probing
+        System.out.println("\n        Using Linear Probing");
+        LinearProbing linearTable = new LinearProbing(tableSize);
+        runHashing(linearTable, data, debugLevel);
+        if (debugLevel >= 1){
+            linearTable.dumpToFile("linear-dump.txt");
+            System.out.println("HashtableExperiment: Saved dump of hash table");
+        }
+
+        // Run Double Hashing
+        System.out.println("\n        Using Double Hashing");
+        DoubleHashing doubleTable = new DoubleHashing(tableSize);
+        runHashing(doubleTable, data, debugLevel);
+        if (debugLevel >= 1){
+            doubleTable.dumpToFile("double-dump.txt");
+            System.out.println("HashtableExperiment: Saved dump of hash table");
+        }
     }
 
-    private static void runExperiment(List<HashObject> data, int n, int m, double loadFactor, int debugLevel) {
-        LinearProbing linearTable = new LinearProbing(m);
-        DoubleHashing doubleHashingTable = new DoubleHashing(m);
-
-        int totalProbesLinear = 0;
-        int totalProbesDouble = 0;
-        int insertionsLinear = 0;
-        int insertionsDouble = 0;
+    private static void runHashing(Hashtable table, HashObject[] data, int debugLevel) {
+        int duplicates = 0;
+        long totalProbes = 0;
 
         for (HashObject obj : data) {
-            if (insertionsLinear < n) {
-                totalProbesLinear += linearTable.insert(obj);
-                if (!linearTable.isDuplicate(obj)) insertionsLinear++;
+            int initialSize = table.numElements;
+            table.insert(obj);
+            if(initialSize == table.numElements){
+                duplicates++;
+            }else{
+                totalProbes += obj.getProbeCount();
             }
-            if (insertionsDouble < n) {
-                totalProbesDouble += doubleHashingTable.insert(obj);
-                if (!doubleHashingTable.isDuplicate(obj)) insertionsDouble++;
+
+            if (debugLevel == 2) {
+                if (table.search(obj.getKey()).getFrequency() > 1) {
+                    System.out.println("Duplicate key: " + obj.getKey().toString());
+                } else {
+                    System.out.println("Inserted key: " + obj.getKey().toString());
+                }
             }
         }
 
-        double avgProbesLinear = insertionsLinear == 0 ? 0 : (double) totalProbesLinear / insertionsLinear;
-        double avgProbesDouble = insertionsDouble == 0 ? 0 : (double) totalProbesDouble / insertionsDouble;
+        table.printSummary();
+        System.out.println("        Inserted " + data.length + " elements, of which " + duplicates + " were duplicates");
+        System.out.println("        Avg. no. of probes = " + String.format("%.2f", (double) totalProbes / (data.length - duplicates)));
+    }
 
-        switch (debugLevel) {
-            case 0:
-                printSummary(avgProbesLinear, avgProbesDouble);
-                break;
+    private static String getDataSourceName(int dataSource) {
+        switch (dataSource) {
             case 1:
-                printSummary(avgProbesLinear, avgProbesDouble);
-                linearTable.dumpToFile("linear-dump.txt");
-                doubleHashingTable.dumpToFile("double-dump.txt");
-                break;
+                return "Random Numbers";
             case 2:
-                linearTable.printDebug();
-                doubleHashingTable.printDebug();
-                break;
+                return "Date Values";
+            case 3:
+                return "Word-List";
             default:
-                printSummary(avgProbesLinear, avgProbesDouble);
-                break;
+                return "Unknown";
         }
-    }
-
-    private static void printSummary(double avgProbesLinear, double avgProbesDouble) {
-        System.out.println("Experiment Summary:");
-        System.out.println("Linear Probing Average Probes: " + avgProbesLinear);
-        System.out.println("Double Hashing Average Probes: " + avgProbesDouble);
-    }
-
-    protected int positiveMod(int dividend, int divisor) {
-        int quotient = dividend % divisor;
-        if (quotient < 0) {
-            quotient += divisor;
-        }
-        return quotient;
     }
 }
