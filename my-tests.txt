@@ -1,0 +1,21 @@
+my output
+ > table[0]:  4 1
+> table[1]: enfetter'd 1 1
+> table[2]: atherton 2 1
+> table[4]: whate'er 26 1
+> table[8]: cried 90 1
+> table[11]: mansfield 5 1
+> table[12]: indispensable 7 4
+> table[16]: episode 5 1
+> table[17]: lin'd 5 1
+> table[19]: scratching 4 1
+> table[21]: cups 9 1
+> table[22]: crier 7 1
+> table[23]: cries 65 1
+> table[24]: salhn 1 1
+
+expected 
+< table[0]:  3 0
+< table[4]: whate'er 3 0
+< table[8]: cried 39 0
+< table[19]: scratching 1 0

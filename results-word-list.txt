@@ -1,0 +1,106 @@
+
+--------------------------------------------------------------------------------
+HashtableExperiment: Found a twin prime table capacity: 95791
+HashtableExperiment: Input: Word-List  Loadfactor: 0.5
+
+        Using Linear Probing
+Hashtable: size of hash table is 0
+        Inserted 47896 elements, of which 47896 were duplicates
+        Avg. no. of probes = NaN
+
+        Using Double Hashing
+Hashtable: size of hash table is 0
+        Inserted 47896 elements, of which 47896 were duplicates
+        Avg. no. of probes = NaN
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+HashtableExperiment: Found a twin prime table capacity: 95791
+HashtableExperiment: Input: Word-List  Loadfactor: 0.6
+
+        Using Linear Probing
+Hashtable: size of hash table is 0
+        Inserted 57475 elements, of which 57475 were duplicates
+        Avg. no. of probes = NaN
+
+        Using Double Hashing
+Hashtable: size of hash table is 0
+        Inserted 57475 elements, of which 57475 were duplicates
+        Avg. no. of probes = NaN
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+HashtableExperiment: Found a twin prime table capacity: 95791
+HashtableExperiment: Input: Word-List  Loadfactor: 0.7
+
+        Using Linear Probing
+Hashtable: size of hash table is 0
+        Inserted 67054 elements, of which 67054 were duplicates
+        Avg. no. of probes = NaN
+
+        Using Double Hashing
+Hashtable: size of hash table is 0
+        Inserted 67054 elements, of which 67054 were duplicates
+        Avg. no. of probes = NaN
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+HashtableExperiment: Found a twin prime table capacity: 95791
+HashtableExperiment: Input: Word-List  Loadfactor: 0.8
+
+        Using Linear Probing
+Hashtable: size of hash table is 0
+        Inserted 76633 elements, of which 76633 were duplicates
+        Avg. no. of probes = NaN
+
+        Using Double Hashing
+Hashtable: size of hash table is 0
+        Inserted 76633 elements, of which 76633 were duplicates
+        Avg. no. of probes = NaN
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+HashtableExperiment: Found a twin prime table capacity: 95791
+HashtableExperiment: Input: Word-List  Loadfactor: 0.9
+
+        Using Linear Probing
+Hashtable: size of hash table is 0
+        Inserted 86212 elements, of which 86212 were duplicates
+        Avg. no. of probes = NaN
+
+        Using Double Hashing
+Hashtable: size of hash table is 0
+        Inserted 86212 elements, of which 86212 were duplicates
+        Avg. no. of probes = NaN
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+HashtableExperiment: Found a twin prime table capacity: 95791
+HashtableExperiment: Input: Word-List  Loadfactor: 0.95
+
+        Using Linear Probing
+Hashtable: size of hash table is 0
+        Inserted 91002 elements, of which 91002 were duplicates
+        Avg. no. of probes = NaN
+
+        Using Double Hashing
+Hashtable: size of hash table is 0
+        Inserted 91002 elements, of which 91002 were duplicates
+        Avg. no. of probes = NaN
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+HashtableExperiment: Found a twin prime table capacity: 95791
+HashtableExperiment: Input: Word-List  Loadfactor: 0.99
+
+        Using Linear Probing
+Hashtable: size of hash table is 0
+        Inserted 94834 elements, of which 94834 were duplicates
+        Avg. no. of probes = NaN
+
+        Using Double Hashing
+Hashtable: size of hash table is 0
+        Inserted 94834 elements, of which 94834 were duplicates
+        Avg. no. of probes = NaN
+--------------------------------------------------------------------------------
+

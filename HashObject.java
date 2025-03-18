@@ -1,7 +1,7 @@
 /**
  * @author Tristin Watkins
- * CS321 Spring 2025
- * March 12 2025
+ *         CS321 Spring 2025
+ *         March 12 2025
  */
 public class HashObject {
     private Object key;
@@ -23,21 +23,32 @@ public class HashObject {
     }
 
     public void incrementFrequency() {
-        frequency++;
-    }
-
-    public void setProbeCount(int probeCount) {
-        this.probeCount = probeCount;
+        this.frequency++;
     }
 
     public int getProbeCount() {
         return probeCount;
     }
 
+    public void setProbeCount(int probeCount) {
+        this.probeCount = probeCount;
+    }
+
+    public void incrementProbCount() {
+        this.probeCount++;
+    }
+
+    @Override
+    public int hashCode() {
+        return key.hashCode();
+    }
+
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
         HashObject other = (HashObject) obj;
         return key.equals(other.key);
     }
